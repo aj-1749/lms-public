@@ -1,6 +1,6 @@
 pipeline {
     agent {
-      label 'docker'
+      label 'docker-hub'
     }
 
     environment {
@@ -10,6 +10,14 @@ pipeline {
         registryCredential = 'docker-hub'
     }
 
+    stages {
+
+
+        stage('notification1') {
+            steps {
+                slackSend channel: 'lmsupdates', color: '#4518d9', message: 'slackSend "pipeline has been started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"', teamDomain: 'internship-2022-hq', tokenCredentialId: 'slackuser'
+            }
+        }
         stage('Building the docker image') {
             steps {
                 sh 'cd webapp && docker build -t hello8989/frontend-lms .'
